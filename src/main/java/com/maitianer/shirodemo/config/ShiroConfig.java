@@ -3,9 +3,14 @@ package com.maitianer.shirodemo.config;
 import com.maitianer.shirodemo.realm.UserRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import sun.security.action.PutAllAction;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @Author: zhou
@@ -24,13 +29,28 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         //添加shiro的过滤器
-        //shiro的内置过滤器：可以实现权限的相关拦截
-        //常用的过滤器：
-        //1.anno：无需认证（登陆即可访问）
-        //2.authc：必须认证才可以访问
-        //3.user：如果使用remanberMe的功能就可以直接访问
-        //4.perms：该资源必须得到资源权限才可以访问
-        //5.role：该资源必须得到角色权限才可以访问
+        /**
+         *         shiro的内置过滤器：可以实现权限的相关拦截
+         *         常用的过滤器：
+         *         1.anon：无需认证（登陆即可访问）
+         *         2.authc：必须认证才可以访问
+         *         3.user：如果使用remanberMe的功能就可以直接访问
+         *         4.perms：该资源必须得到资源权限才可以访问
+         *         5.role：该资源必须得到角色权限才可以访问
+         */
+        Map<String,String> filterMap =new LinkedHashMap<String, String>();
+//        filterMap.put("/add","authc");
+//        filterMap.put("/update","authc");
+        filterMap.put("/testThymeleaf","anon");
+        filterMap.put("/*","authc");
+
+
+        //修改登录页面
+        shiroFilterFactoryBean.setLoginUrl("/toLogin");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap((filterMap));
+
+
 //        Map filterMap = new HashMap();
 //
 //        //必须登陆才可以访问
