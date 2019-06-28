@@ -1,5 +1,6 @@
 package com.maitianer.shirodemo.config;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.maitianer.shirodemo.realm.UserRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -43,11 +44,18 @@ public class ShiroConfig {
 //        filterMap.put("/update","authc");
         filterMap.put("/testThymeleaf","anon");
         filterMap.put("/login","anon");
+        //授权过滤器,当前授权被拦截自动跳转到未授权页面
+        filterMap.put("/add","perms[user:add]");
+        filterMap.put("/update","perms[user:update]");
+
         filterMap.put("/*","authc");
 
 
-        //修改登录页面
+        //修改调整的登录页面
         shiroFilterFactoryBean.setLoginUrl("/toLogin");
+        //设置未授权提示页面
+        shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
+
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap((filterMap));
 
@@ -92,8 +100,8 @@ public class ShiroConfig {
     /**
      * 配置shiroDialect，用于thymeleaf和shiro标签配合使用
      */
-//    @Bean
-//    public ShiroDialect getShiroDialect() {
-//        return new ShiroDialect();
-//    }
+    @Bean
+    public ShiroDialect getShiroDialect() {
+        return new ShiroDialect();
+    }
 }

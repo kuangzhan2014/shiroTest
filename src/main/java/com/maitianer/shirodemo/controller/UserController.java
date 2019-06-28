@@ -1,5 +1,6 @@
 package com.maitianer.shirodemo.controller;
 
+import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.springframework.stereotype.Controller;
@@ -41,9 +42,14 @@ public class UserController {
         return "/login";
     }
 
+    @RequestMapping("/noAuth")
+    public String noAuth(){
+    return "/noAuth";
+    }
+
     @RequestMapping("/login")
     public String login(String username,String password,Model model){
-        System.out.println("username="+username);
+//        System.out.println("username="+username);
         /**
          * 使用shiro编写认证操作
          * */

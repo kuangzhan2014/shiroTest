@@ -8,4 +8,5 @@ import com.maitianer.shirodemo.domain.User;
  */
 public interface UserService {
     User findByUsername(String username);
+    User findById(Integer id);
 }

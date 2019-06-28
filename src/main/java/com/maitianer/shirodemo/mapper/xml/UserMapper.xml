@@ -6,5 +6,9 @@
         where u.username=#{username}
     </select>
 
+    <select id="findById" resultType="User">
+        select * from user u
+        where u.id=#{id}
+    </select>
 
 </mapper>
