@@ -1,11 +1,12 @@
 package com.maitianer.shirodemo.realm;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import com.maitianer.shirodemo.domain.User;
+import com.maitianer.shirodemo.service.UserService;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Author: zhou
@@ -19,6 +20,9 @@ public class UserRealm extends AuthorizingRealm {
      * @param principals
      * @return
      */
+    @Autowired
+    private UserService userService;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("执行授权逻辑");
@@ -39,16 +43,17 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 执行认证逻辑
-     * @param token
+     * @param authenticationToken
      * @return
      * @throws AuthenticationException
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.println("执行认证逻辑");
-//
-//        //编写shiro判断逻辑，判断用户名密码是否正确
-//        UsernamePasswordToken token = (UsernamePasswordToken)authenticationToken;
+
+        //编写shiro判断逻辑，判断用户名密码是否正确
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        User user =userService.findByUsername(token.getUsername());
 //        String username = token.getUsername();
 //        //1.判断用户名
 //        List<Map> mapList = userService.selectUserList(token.getUsername());
@@ -57,8 +62,14 @@ public class UserRealm extends AuthorizingRealm {
 //        } else {
 //            return new SimpleAuthenticationInfo(username, mapList.get(0).get("PASSWORD"),"");
 //        }
-        return null;
+        //1.判断用户名
+        if (null==user) {
+            //用户名不存在
+            return null;//shiro底层会自动抛出UnknownAccountException
+        }else {
+            return new SimpleAuthenticationInfo("", user.getPassword(), "");
+        }
     }
-
-
 }
+
+

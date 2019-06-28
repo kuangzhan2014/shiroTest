@@ -42,6 +42,7 @@ public class ShiroConfig {
 //        filterMap.put("/add","authc");
 //        filterMap.put("/update","authc");
         filterMap.put("/testThymeleaf","anon");
+        filterMap.put("/login","anon");
         filterMap.put("/*","authc");
 
 
